@@ -10,7 +10,7 @@ public abstract class Square {
 
     protected final int squareCoordinate;
 
-    private static final Map<Integer, EmptySquare> EMPTY_SQUARES = createAllPossibleEmptySquares();
+    private static final Map<Integer, EmptySquare> EMPTY_SQUARES_CACHE = createAllPossibleEmptySquares();
 
     private static Map<Integer, EmptySquare> createAllPossibleEmptySquares() {
         final Map<Integer, EmptySquare> emptySquareMap = new HashMap<>();
@@ -23,7 +23,7 @@ public abstract class Square {
     }
 
     public static Square createSquare(final int squareCoordinate, final Piece piece){
-        return piece != null ? new OccupiedSquare(squareCoordinate, piece) : EMPTY_SQUARES.get(squareCoordinate);
+        return piece != null ? new OccupiedSquare(squareCoordinate, piece) : EMPTY_SQUARES_CACHE.get(squareCoordinate);
     }
 
     private Square(int squareCoordinate){
@@ -37,7 +37,7 @@ public abstract class Square {
 
     public  static final class EmptySquare extends Square{
 
-        EmptySquare(final int coordinate){
+        private EmptySquare(final int coordinate){
             super(coordinate);
         }
 
@@ -57,7 +57,7 @@ public abstract class Square {
 
         private final Piece pieceOnSquare;
 
-        OccupiedSquare(int squareCoordinate, Piece pieceOnSquare){
+        private OccupiedSquare(int squareCoordinate, Piece pieceOnSquare){
             super(squareCoordinate);
             this.pieceOnSquare = pieceOnSquare;
         }
