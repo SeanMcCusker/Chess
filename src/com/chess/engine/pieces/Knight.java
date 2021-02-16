@@ -2,11 +2,13 @@ package com.chess.engine.pieces;
 
 import com.chess.engine.Colour;
 import com.chess.engine.board.Board;
+import com.chess.engine.board.BoardUtils;
 import com.chess.engine.board.Move;
 import com.chess.engine.board.Square;
 import com.google.common.collect.ImmutableList;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 public class Knight extends Piece {
@@ -18,15 +20,21 @@ public class Knight extends Piece {
     }
 
     @Override
-    public List<Move> calculateLegalMoves(Board board) {
+    public Collection<Move> calculateLegalMoves(Board board) {
 
-        int candidateDestinationCoordinate;
         final List<Move> legalMoves = new ArrayList<>();
 
-        for(final int currentCandidate : CANDIDATE_MOVE_COORDINATES){
-            candidateDestinationCoordinate = this.piecePosition + currentCandidate;
+        for(final int currentCandidateOffset : CANDIDATE_MOVE_COORDINATES){
+            final int candidateDestinationCoordinate = this.piecePosition + currentCandidateOffset;
 
-            if(true){
+            if(BoardUtils.isValidSquareCoordinate(candidateDestinationCoordinate)){
+                if(isAFileExclusion(this.piecePosition, currentCandidateOffset) ||
+                        (isBFileExclusion(this.piecePosition, currentCandidateOffset)) ||
+                        (isGFileExclusion(this.piecePosition, currentCandidateOffset)) ||
+                        (isHFileExclusion(this.piecePosition, currentCandidateOffset))){
+                    continue;
+                }
+
                 final Square candidateDestinationSquare = board.getSquare(candidateDestinationCoordinate);
 
                 if(!candidateDestinationSquare.isSquareOccupied()){
@@ -44,4 +52,23 @@ public class Knight extends Piece {
         }
         return ImmutableList.copyOf(legalMoves);
     }
+
+    private static boolean isAFileExclusion(final int currentPosition, final int candidateOffset){
+        return BoardUtils.FIRST_FILE[currentPosition] && (candidateOffset == -17
+                || candidateOffset == -10 || candidateOffset == 6 || candidateOffset == 15);
+    }
+
+    private static boolean isBFileExclusion(final int currentPosition, final int candidateOffset){
+        return BoardUtils.SECOND_FILE[currentPosition] && (candidateOffset == -10 && candidateOffset == -6);
+    }
+
+    private static boolean isGFileExclusion(final int currentPosition, final int candidateOffset){
+        return BoardUtils.SEVENTH_FILE[currentPosition] && (candidateOffset == 10 || candidateOffset == 6);
+    }
+
+    private static boolean isHFileExclusion(final int currentPosition, final int candidateOffset){
+        return BoardUtils.EIGHTH_FILE[currentPosition] && (candidateOffset == 17
+                || candidateOffset == 10 || candidateOffset == -6 || candidateOffset == -15);
+    }
+
 }
