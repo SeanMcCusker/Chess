@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import static com.chess.engine.board.Move.*;
+
 public class Knight extends Piece {
 
     private final static int[] CANDIDATE_MOVE_COORDINATES = {-17, -15, -10, -6, 6, 10, 15, 17};
@@ -38,13 +40,13 @@ public class Knight extends Piece {
                 final Square candidateDestinationSquare = board.getSquare(candidateDestinationCoordinate);
 
                 if(!candidateDestinationSquare.isSquareOccupied()){
-                    legalMoves.add(new Move());
+                    legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
                 } else {
                     final Piece pieceAtDestination = candidateDestinationSquare.getPiece();
                     final Colour pieceColour = pieceAtDestination.getPieceColour();
 
                     if(this.pieceColour != pieceColour){
-                        legalMoves.add(new Move());
+                        legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                     }
                 }
             }
