@@ -11,13 +11,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static com.chess.engine.board.Move.*;
+public class Rook extends Piece{
 
-public class Bishop extends Piece{
+    private final static int[] CANDIDATE_MOVE_VECTOR_CANDIDATE = {-8, -1, 1, 8};
 
-    private final static int[] CANDIDATE_MOVE_VECTOR_CANDIDATE = {-9, -7, 7, 9};
-
-    Bishop(int piecePosition, Colour pieceColour) {
+    Rook(int piecePosition, Colour pieceColour) {
         super(piecePosition, pieceColour);
     }
 
@@ -32,7 +30,7 @@ public class Bishop extends Piece{
 
             while(BoardUtils.isValidSquareCoordinate(candidateDestinationCoordinate)){
                 if(isAFileExclusion(candidateDestinationCoordinate, candidateCoordinateOffset) ||
-                isHFileExclusion(candidateDestinationCoordinate, candidateCoordinateOffset)){
+                        isHFileExclusion(candidateDestinationCoordinate, candidateCoordinateOffset)){
                     break;
                 }
 
@@ -43,13 +41,13 @@ public class Bishop extends Piece{
                     final Square candidateDestinationSquare = board.getSquare(candidateDestinationCoordinate);
 
                     if(!candidateDestinationSquare.isSquareOccupied()){
-                        legalMoves.add(new MajorMove(board, this, candidateDestinationCoordinate));
+                        legalMoves.add(new Move.MajorMove(board, this, candidateDestinationCoordinate));
                     } else {
                         final Piece pieceAtDestination = candidateDestinationSquare.getPiece();
                         final Colour pieceColour = pieceAtDestination.getPieceColour();
 
                         if(this.pieceColour != pieceColour){
-                            legalMoves.add(new AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
+                            legalMoves.add(new Move.AttackMove(board, this, candidateDestinationCoordinate, pieceAtDestination));
                         }
                         break;
                     }
@@ -62,10 +60,10 @@ public class Bishop extends Piece{
     }
 
     private static boolean isAFileExclusion(final int currentPosition, final int candidateOffset){
-        return BoardUtils.FIRST_FILE[currentPosition] && (candidateOffset == -9 || candidateOffset == 7);
+        return BoardUtils.FIRST_FILE[currentPosition] && (candidateOffset == -1);
     }
 
     private static boolean isHFileExclusion(final int currentPosition, final int candidateOffset){
-        return BoardUtils.EIGHTH_FILE[currentPosition] && (candidateOffset == -7 || candidateOffset == 9);
+        return BoardUtils.EIGHTH_FILE[currentPosition] && (candidateOffset == 1);
     }
 }
